@@ -75,6 +75,146 @@ describe('/api/users', () => {
 
       expect(addedUser.hashedPassword).not.toEqual(testUser.password);
     });
+
+    describe('fails when fields are missing', () => {
+      it('should fail when id is missing', async () => {
+        testUser.id = null;
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+        expect(errorText).toContain('User validation failed: _id');
+      });
+
+      it('should fail when firstName is missing', async () => {
+        testUser.firstName = null;
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+        expect(errorText).toContain('User validation failed: firstName');
+      });
+
+      it('should fail when lastName is missing', async () => {
+        testUser.lastName = null;
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+        expect(errorText).toContain('User validation failed: lastName');
+      });
+
+      it('should fail when hashedPassword is missing', async () => {
+        testUser.password = null;
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+        expect(errorText).toContain('User validation failed: password');
+      });
+
+      describe('address object', () => {
+        it('should fail when address is missing', async () => {
+          testUser.address = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed');
+        });
+
+        it('should fail when country is missing', async () => {
+          testUser.address.country = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: address.country');
+        });
+
+        it('should fail when street1 is missing', async () => {
+          testUser.address.street1 = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: address.street1');
+        });
+
+        it('should not fail when optional field street2 is missing', async () => {
+          testUser.address.street2 = null;
+
+          await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(201);
+
+          const usersAtEnd = await helper.usersInDb();
+          const emails = usersAtEnd.map((x) => x.id);
+
+          expect(emails).toContain(testUser.id);
+        });
+
+        it('should fail when city is missing', async () => {
+          testUser.address.city = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: address.city');
+        });
+
+        it('should fail when zip is missing', async () => {
+          testUser.address.zip = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: address.zip');
+        });
+      });
+
+      describe('shippingAddress object', () => {
+        it('should fail when shippingAddress is missing', async () => {
+          testUser.shippingAddress = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed');
+        });
+      });
+    });
   });
 });
 

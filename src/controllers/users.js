@@ -10,6 +10,10 @@ usersRouter.get('/', async (_req, res) => {
 usersRouter.post('/', async (req, res) => {
   const { body } = req;
 
+  if (!body.password) {
+    return res.status(400).json({ error: 'User validation failed: password: Path `password` is required.' });
+  }
+
   const passwordHashed = await hashPassword(body.password);
 
   if (String(passwordHashed) === String(body.password)) {
