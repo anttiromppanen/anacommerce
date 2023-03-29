@@ -213,6 +213,112 @@ describe('/api/users', () => {
           const errorText = response.error.text;
           expect(errorText).toContain('User validation failed');
         });
+
+        it('should fail when country is missing', async () => {
+          testUser.shippingAddress.country = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: shippingAddress.country');
+        });
+
+        it('should fail when street1 is missing', async () => {
+          testUser.shippingAddress.street1 = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: shippingAddress.street1');
+        });
+
+        it('should not fail when optional field street2 is missing', async () => {
+          testUser.shippingAddress.street2 = null;
+
+          await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(201);
+
+          const usersAtEnd = await helper.usersInDb();
+          const emails = usersAtEnd.map((x) => x.id);
+
+          expect(emails).toContain(testUser.id);
+        });
+
+        it('should fail when city is missing', async () => {
+          testUser.shippingAddress.city = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: shippingAddress.city');
+        });
+
+        it('should fail when zip is missing', async () => {
+          testUser.shippingAddress.zip = null;
+
+          const response = await api
+            .post('/api/users')
+            .send(testUser)
+            .expect(400);
+
+          const errorText = response.error.text;
+          expect(errorText).toContain('User validation failed: shippingAddress.zip');
+        });
+      });
+    });
+
+    describe('fails when fields don\'t meet minlength requirement', () => {
+      it('should fail when id (email) is too short', async () => {
+        testUser.id = 'a@co';
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+
+        expect(errorText).toContain('_id');
+        expect(errorText).toContain('is shorter than the minimum allowed length');
+      });
+
+      it('should fail when firstName is too short', async () => {
+        testUser.firstName = 'a';
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+
+        expect(errorText).toContain('firstName');
+        expect(errorText).toContain('is shorter than the minimum allowed length');
+      });
+
+      it('should fail when lastName is too short', async () => {
+        testUser.lastName = 'b';
+
+        const response = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(400);
+
+        const errorText = response.error.text;
+
+        expect(errorText).toContain('lastName');
+        expect(errorText).toContain('is shorter than the minimum allowed length');
       });
     });
   });
