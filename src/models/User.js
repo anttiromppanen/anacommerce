@@ -13,6 +13,11 @@ const userSchema = mongoose.Schema({
     minlength: 2,
     required: true,
   },
+  lastName: {
+    type: String,
+    minlength: 2,
+    required: true,
+  },
   hashedPassword: {
     type: String,
     required: true,

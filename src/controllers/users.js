@@ -1,4 +1,5 @@
 const usersRouter = require('express').Router();
+const { hashPassword } = require('../utils/hashPassword');
 const User = require('../models/User');
 
 usersRouter.get('/', async (_req, res) => {
@@ -9,8 +10,11 @@ usersRouter.get('/', async (_req, res) => {
 usersRouter.post('/', async (req, res) => {
   const { body } = req;
 
-  // not done yet
-  const passwordHashed = body.password;
+  const passwordHashed = await hashPassword(body.password);
+
+  if (String(passwordHashed) === String(body.password)) {
+    return res.status(400).json({ error: 'Error with storing information' });
+  }
 
   const newUser = new User({
     _id: body.id,
@@ -22,7 +26,7 @@ usersRouter.post('/', async (req, res) => {
   });
 
   const savedUser = await newUser.save();
-  res.status(201).json(savedUser);
+  return res.status(201).json(savedUser);
 });
 
 module.exports = usersRouter;
