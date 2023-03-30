@@ -201,6 +201,40 @@ describe('/api/users', () => {
         });
       });
 
+      it('should fail when id (email) is already registered', async () => {
+        await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(201);
+
+        const testUserWithIdenticalId = {
+          id: 'testuser666@hotmail.com',
+          firstName: 'Tauno',
+          lastName: 'Palo',
+          password: 'gsdlfgjhksdfh45sglöfkj4',
+          address: {
+            country: 'Finland',
+            street1: 'Jokukatu 25',
+            street2: 'A15',
+            city: 'Helsinki',
+            zip: '00100',
+          },
+          shippingAddress: {
+            country: 'Finland',
+            street1: 'Taunonkatu 76',
+            city: 'Rauma',
+            zip: '01100',
+          },
+        };
+
+        const response = await api
+          .post('/api/users')
+          .send(testUserWithIdenticalId)
+          .expect(500);
+
+        expect(response.error.text).toContain('email already registered');
+      });
+
       describe('shippingAddress object', () => {
         it('should fail when shippingAddress is missing', async () => {
           testUser.shippingAddress = null;
