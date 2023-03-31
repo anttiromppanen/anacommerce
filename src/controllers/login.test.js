@@ -43,7 +43,6 @@ describe('/api/login', () => {
 
     const response = await api
       .post('/api/login')
-      .set('Authorization', 'abc123')
       .send(credentials)
       .expect(401);
 
@@ -58,7 +57,6 @@ describe('/api/login', () => {
 
     const response = await api
       .post('/api/login')
-      .set('Authorization', 'abc123')
       .send(credentials)
       .expect(401);
 
@@ -73,7 +71,6 @@ describe('/api/login', () => {
 
     const response = await api
       .post('/api/login')
-      .set('Authorization', 'abc123')
       .send(credentials)
       .expect(200);
 

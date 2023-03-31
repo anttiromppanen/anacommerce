@@ -1,10 +1,32 @@
+const jwt = require('jsonwebtoken');
 const usersRouter = require('express').Router();
 const { hashPassword } = require('../utils/hashPassword');
 const User = require('../models/User');
 
-usersRouter.get('/', async (_req, res) => {
-  const users = await User.find({});
-  res.json(users);
+const getTokenFrom = (request) => {
+  const authorization = request.get('authorization');
+  if (authorization && authorization.startsWith('Bearer ')) {
+    return authorization.replace('Bearer', '');
+  }
+
+  return null;
+};
+
+usersRouter.get('/:id', async (req, res) => {
+  const userID = req.params.id;
+  const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
+
+  if (!decodedToken.id) {
+    return res.status(401).json({ error: 'invalid token' });
+  }
+
+  const user = await User.findById(userID);
+
+  if (!user) {
+    return res.status(404).end();
+  }
+
+  return res.json(user);
 });
 
 usersRouter.post('/', async (req, res) => {

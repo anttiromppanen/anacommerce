@@ -36,19 +36,6 @@ describe('/api/users', () => {
     };
   });
 
-  test('should return users as json', async () => {
-    await api
-      .get('/api/users')
-      .expect(200)
-      .expect('Content-Type', /application\/json/);
-  });
-
-  test('should return all users', async () => {
-    const users = await api.get('/api/users');
-
-    expect(users.body).toHaveLength(helper.initialUsers.length);
-  });
-
   describe('POST /api/users', () => {
     it('should success with valid information', async () => {
       await api
@@ -353,6 +340,18 @@ describe('/api/users', () => {
 
         expect(errorText).toContain('lastName');
         expect(errorText).toContain('is shorter than the minimum allowed length');
+      });
+    });
+
+    describe('fetching of individual user information', () => {
+      it('should fail when token not given', async () => {
+        const users = await helper.usersInDb();
+
+        const response = await api
+          .get(`/api/users/${users[0].id}`)
+          .expect(401);
+
+        expect(response.error.text).toContain('invalid token');
       });
     });
   });
