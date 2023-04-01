@@ -5,8 +5,9 @@ const User = require('../models/User');
 
 const getTokenFrom = (request) => {
   const authorization = request.get('authorization');
+
   if (authorization && authorization.startsWith('Bearer ')) {
-    return authorization.replace('Bearer', '');
+    return authorization.replace('Bearer ', '');
   }
 
   return null;
@@ -20,12 +21,13 @@ usersRouter.get('/:id', async (req, res) => {
     return res.status(401).json({ error: 'invalid token' });
   }
 
-  const user = await User.findById(userID);
+  const user = await User.findById(userID).select('-hashedPassword');
 
   if (!user) {
     return res.status(404).end();
   }
 
+  delete user.hashedPassword;
   return res.json(user);
 });
 

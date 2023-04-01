@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const helper = require('../utils/test_helper');
@@ -352,6 +353,28 @@ describe('/api/users', () => {
           .expect(401);
 
         expect(response.error.text).toContain('invalid token');
+      });
+
+      it('should return user information when correct token is given', async () => {
+        await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(201);
+
+        const savedUserLogin = await api
+          .post('/api/login')
+          .send({ username: testUser.id, password: testUser.password })
+          .expect(200);
+
+        const { token } = savedUserLogin._body;
+
+        const response = await api
+          .get(`/api/users/${testUser.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200);
+
+        expect(response._body).toBeTruthy();
+        expect(response._body).not.toHaveProperty('hashedPassword');
       });
     });
   });
