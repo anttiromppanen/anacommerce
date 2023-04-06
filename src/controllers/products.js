@@ -6,6 +6,11 @@ productsRouter.get('/', async (_req, res) => {
   return res.status(201).json(allProducts);
 });
 
+productsRouter.get('/categories', async (req, res) => {
+  const allCategories = await Product.find().distinct('category');
+  res.status(201).json(allCategories);
+});
+
 productsRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
   const productById = await Product.findById(id);

@@ -1,6 +1,6 @@
 const productCategoryTypes = Object.freeze({
   Food: 'Food',
-  Clothes: 'Clothes',
+  Clothes: 'Clothing',
 });
 
 module.exports = productCategoryTypes;

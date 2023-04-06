@@ -69,6 +69,20 @@ describe('/api/products', () => {
   });
 });
 
+describe('GET /api/products/categories', () => {
+  it('should return product categories as JSON', async () => {
+    const { _body } = await api
+      .get('/api/products/categories')
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const productTypesFromAddedItems = helper.initialProducts.map((product) => product.category);
+
+    expect(_body).toHaveLength(productTypesFromAddedItems.length);
+    expect(_body).toContain(productTypesFromAddedItems[0]);
+  });
+});
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

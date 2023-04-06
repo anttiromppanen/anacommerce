@@ -65,10 +65,10 @@ const initialProducts = [
     images: ['https://www.asdfasdfasdfasdf.com/img1', 'https://www.asfdjsafdasfjl.com/img2'],
   },
   {
-    name: 'Potato',
+    name: 'Jacket',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo',
-    category: 'Food',
-    subCategory: 'Vegetable',
+    category: 'Clothing',
+    subCategory: 'Jacket',
     skus: [
       {
         weight: 0.7,
