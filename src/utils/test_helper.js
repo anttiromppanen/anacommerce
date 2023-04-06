@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Product = require('../models/Product');
 
 const initialUsers = [
   {
@@ -43,12 +44,56 @@ const initialUsers = [
   },
 ];
 
+const initialProducts = [
+  {
+    name: 'Carrot',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo. Vel pretium lectus quam id leo in vitae turpis.',
+    skus: [
+      {
+        weight: 0.2,
+        originCountry: 'Guatemala',
+        quantity: 200,
+      },
+      {
+        weight: 0.4,
+        originCountry: 'Suomi',
+        quantity: 400,
+      },
+    ],
+    images: ['https://www.asdfasdfasdfasdf.com/img1', 'https://www.asfdjsafdasfjl.com/img2'],
+  },
+  {
+    name: 'Potato',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo',
+    skus: [
+      {
+        weight: 0.7,
+        originCountry: 'Sweden',
+        quantity: 656,
+      },
+      {
+        weight: 0.2,
+        originCountry: 'Poland',
+        quantity: 324,
+      },
+    ],
+    images: ['https://www.asdfasdfas.com/img1', 'https://www.asfdjs.com/img2'],
+  },
+];
+
 const usersInDb = async () => {
   const users = await User.find({});
   return users.map((user) => user.toJSON());
 };
 
+const productsInDb = async () => {
+  const products = await Product.find({});
+  return products.map((product) => product.toJSON());
+};
+
 module.exports = {
   initialUsers,
+  initialProducts,
   usersInDb,
+  productsInDb,
 };
