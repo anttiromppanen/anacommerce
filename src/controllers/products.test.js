@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const supertest = require('supertest');
 const mongoose = require('mongoose');
 const helper = require('../utils/test_helper');
@@ -17,7 +18,7 @@ describe('/api/products', () => {
     it('should return all products as JSON', async () => {
       await api
         .get('/api/products')
-        .expect(201)
+        .expect(200)
         .expect('Content-Type', /application\/json/);
 
       const productsAtEnd = await helper.productsInDb();
@@ -27,7 +28,7 @@ describe('/api/products', () => {
     it('should omit id and version fields', async () => {
       const { _body } = await api
         .get('/api/products')
-        .expect(201);
+        .expect(200);
 
       expect(_body[0]).not.toHaveProperty('_id');
       expect(_body[0]).not.toHaveProperty('__v');
@@ -36,7 +37,7 @@ describe('/api/products', () => {
     it('should contain all required fields', async () => {
       const { _body } = await api
         .get('/api/products')
-        .expect(201);
+        .expect(200);
 
       const firstProduct = _body[0];
 
@@ -55,7 +56,7 @@ describe('/api/products', () => {
 
       const { _body } = await api
         .get(`/api/products/${_id}`)
-        .expect(201);
+        .expect(200);
 
       const initialProducts = await helper.productsInDb();
       const initialProductNames = initialProducts.map((product) => product.name);
@@ -66,20 +67,73 @@ describe('/api/products', () => {
       expect(initialProduct.name).toEqual(_body.name);
       expect(initialProduct.description).toEqual(_body.description);
     });
+
+    it('should return 404 when item not found', async () => {
+      const products = await helper.productsInDb();
+      const firstProductIdModified = products[0]
+        .id
+        .replace('a', 'b');
+
+      const { error } = await api
+        .get(`/api/products/${firstProductIdModified}`)
+        .expect(404);
+
+      expect(error.text).toContain('Item not found');
+    });
   });
-});
 
-describe('GET /api/products/categories', () => {
-  it('should return product categories as JSON', async () => {
-    const { _body } = await api
-      .get('/api/products/categories')
-      .expect(201)
-      .expect('Content-Type', /application\/json/);
+  describe('GET /api/products/categories', () => {
+    it('should return product categories as JSON', async () => {
+      const { _body } = await api
+        .get('/api/products/categories')
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
 
-    const productTypesFromAddedItems = helper.initialProducts.map((product) => product.category);
+      const productTypesFromAddedItems = helper.initialProducts.map((product) => product.category);
 
-    expect(_body).toHaveLength(productTypesFromAddedItems.length);
-    expect(_body).toContain(productTypesFromAddedItems[0]);
+      expect(_body).toHaveLength(productTypesFromAddedItems.length);
+      expect(_body).toContain(productTypesFromAddedItems[0]);
+    });
+  });
+
+  describe('GET /api/products/categories/:category', () => {
+    it('should return products by category filter as JSON', async () => {
+      const products = await helper.productsInDb();
+      const categoryFilter = products[0].category;
+      const numberOfProductsByFilterInitially = products
+        .filter((product) => product.category === categoryFilter);
+
+      const { _body } = await api
+        .get(`/api/products/categories/${categoryFilter}`)
+        .expect(200)
+        .expect('Content-Type', /application\/json/);
+
+      expect(_body).toHaveLength(numberOfProductsByFilterInitially.length);
+    });
+
+    it('should work when filter is not lowercase', async () => {
+      const categories = await helper.productCategoriesInDb();
+      const firstCategory = categories[0];
+      const filterCategoryUppercase = firstCategory.toUpperCase();
+
+      const resultInproperlyTyped = await api
+        .get(`/api/products/categories/${filterCategoryUppercase}`)
+        .expect(200);
+
+      const resultProperlyTyped = await api
+        .get(`/api/products/categories/${firstCategory}`)
+        .expect(200);
+
+      expect(resultProperlyTyped._body).toHaveLength(resultInproperlyTyped._body.length);
+    });
+
+    it('should return 404 when category is not found', async () => {
+      const { error } = await api
+        .get('/api/products/categories/notacategory')
+        .expect(404);
+
+      expect(error.text).toContain('Category not found');
+    });
   });
 });
 

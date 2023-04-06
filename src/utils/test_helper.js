@@ -95,9 +95,15 @@ const productsInDb = async () => {
   return products.map((product) => product.toJSON());
 };
 
+const productCategoriesInDb = async () => {
+  const categories = await Product.find().distinct('category');
+  return categories;
+};
+
 module.exports = {
   initialUsers,
   initialProducts,
   usersInDb,
   productsInDb,
+  productCategoriesInDb,
 };
