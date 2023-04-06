@@ -48,6 +48,8 @@ const initialProducts = [
   {
     name: 'Carrot',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo. Vel pretium lectus quam id leo in vitae turpis.',
+    category: 'Food',
+    subCategory: 'Vegetable',
     skus: [
       {
         weight: 0.2,
@@ -65,6 +67,8 @@ const initialProducts = [
   {
     name: 'Potato',
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo',
+    category: 'Food',
+    subCategory: 'Vegetable',
     skus: [
       {
         weight: 0.7,

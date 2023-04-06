@@ -42,6 +42,7 @@ describe('/api/products', () => {
 
       expect(firstProduct).toHaveProperty('name');
       expect(firstProduct).toHaveProperty('description');
+      expect(firstProduct).toHaveProperty('category');
       expect(firstProduct).toHaveProperty('skus');
       expect(firstProduct).toHaveProperty('images');
     });
@@ -49,7 +50,21 @@ describe('/api/products', () => {
 
   describe('GET /api/products/:id', () => {
     it('should return correct product by id', async () => {
+      const products = await Product.find({});
+      const { _id } = products[0];
 
+      const { _body } = await api
+        .get(`/api/products/${_id}`)
+        .expect(201);
+
+      const initialProducts = await helper.productsInDb();
+      const initialProductNames = initialProducts.map((product) => product.name);
+
+      const initialProduct = initialProducts.find((product) => product.name === _body.name);
+
+      expect(initialProductNames).toContain(_body.name);
+      expect(initialProduct.name).toEqual(_body.name);
+      expect(initialProduct.description).toEqual(_body.description);
     });
   });
 });
