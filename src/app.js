@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 require('express-async-errors');
 const mongoose = require('mongoose');
@@ -13,6 +14,7 @@ const productsRouter = require('./controllers/products');
 mongoose.set('strictQuery', false);
 
 const app = express();
+app.use(cors());
 
 logger.info(`Connecting to ${config.MONGODB_URI}`);
 
