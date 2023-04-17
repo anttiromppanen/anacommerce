@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
-const productCategoryTypes = require('./fieldTypes');
+const { productCategoryTypes } = require('./fieldTypes');
 
 const productSchema = mongoose.Schema({
   name: {

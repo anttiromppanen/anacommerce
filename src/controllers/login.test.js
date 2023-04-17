@@ -6,6 +6,7 @@ const app = require('../app');
 const api = supertest(app);
 
 const User = require('../models/User');
+const Order = require('../models/Order');
 
 const testUser = {
   id: 'logintestuser@luukku.com',
@@ -26,11 +27,14 @@ const testUser = {
     city: 'Helsinki',
     zip: '00360',
   },
+  orders: [],
 };
 
 describe('/api/login', () => {
   beforeEach(async () => {
     await User.deleteMany({});
+    await Order.deleteMany({});
+
     await api
       .post('/api/users')
       .send(testUser)

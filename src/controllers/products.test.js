@@ -69,10 +69,7 @@ describe('/api/products', () => {
     });
 
     it('should return 404 when item not found', async () => {
-      const products = await helper.productsInDb();
-      const firstProductIdModified = products[0]
-        .id
-        .replace('a', 'b');
+      const firstProductIdModified = new mongoose.Types.ObjectId();
 
       const { error } = await api
         .get(`/api/products/${firstProductIdModified}`)

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const jwt = require('jsonwebtoken');
 const usersRouter = require('express').Router();
 const { hashPassword } = require('../utils/hashPassword');
@@ -21,7 +22,10 @@ usersRouter.get('/:id', async (req, res) => {
     return res.status(401).json({ error: 'invalid token' });
   }
 
-  const user = await User.findById(userID).select('-hashedPassword');
+  const user = await User
+    .findById(userID)
+    .select('-hashedPassword')
+    .populate('orders');
 
   if (!user) {
     return res.status(404).end();
@@ -51,10 +55,13 @@ usersRouter.post('/', async (req, res) => {
     hashedPassword: passwordHashed,
     address: body.address,
     shippingAddress: body.shippingAddress,
+    orders: body.orders || [],
   });
 
   const savedUser = await newUser.save();
-  return res.status(201).json(savedUser);
+  const populateSavedUser = await User.findById(savedUser._id).populate('orders');
+
+  return res.status(201).json(populateSavedUser);
 });
 
 module.exports = usersRouter;

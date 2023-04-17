@@ -1,48 +1,44 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
+const { paymentStatusTypes, orderStatusTypes } = require('./fieldTypes');
 
-const userSchema = mongoose.Schema({
-  _id: {
-    type: String,
-    minlength: 5,
-    required: true,
-  },
-  firstName: {
-    type: String,
-    minlength: 2,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    minlength: 2,
-    required: true,
-  },
-  hashedPassword: {
+const orderSchema = mongoose.Schema({
+  userId: {
     type: String,
     required: true,
   },
-  address: {
-    country: {
-      type: String,
-      required: true,
-    },
-    street1: {
-      type: String,
-      required: true,
-    },
-    street2: {
-      type: String,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    zip: {
-      type: String,
-      required: true,
-    },
+  paymentStatus: {
+    type: String,
+    enum: Object.values(paymentStatusTypes),
+    required: true,
   },
+  status: {
+    type: String,
+    enum: Object.keys(orderStatusTypes),
+    required: true,
+  },
+  amount: {
+    type: mongoose.Types.Decimal128,
+    required: true,
+  },
+  items: [{
+    name: {
+      type: String,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+    },
+    price: {
+      type: mongoose.Types.Decimal128,
+      required: true,
+    },
+    discountPercentage: {
+      type: Number,
+    },
+  }],
   shippingAddress: {
     country: {
       type: String,
@@ -64,10 +60,30 @@ const userSchema = mongoose.Schema({
       required: true,
     },
   },
-  orders: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
+  billingAddress: {
+    country: {
+      type: String,
+      required: true,
+    },
+    street1: {
+      type: String,
+      required: true,
+    },
+    street2: {
+      type: String,
+    },
+    city: {
+      type: String,
+      required: true,
+    },
+    zip: {
+      type: String,
+      required: true,
+    },
+  },
 });
 
-userSchema.set('toJSON', {
+orderSchema.set('toJSON', {
   transform: (_document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
@@ -75,4 +91,4 @@ userSchema.set('toJSON', {
   },
 });
 
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('Order', orderSchema);

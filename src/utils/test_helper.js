@@ -1,5 +1,8 @@
+/* eslint-disable no-underscore-dangle */
+const mongoose = require('mongoose');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const Order = require('../models/Order');
 
 const initialUsers = [
   {
@@ -85,6 +88,79 @@ const initialProducts = [
   },
 ];
 
+const initialOrders = [
+  {
+    _id: new mongoose.Types.ObjectId(),
+    userId: initialUsers[0]._id,
+    paymentStatus: 'Complete',
+    status: 'Delivered',
+    amount: 50,
+    items: [
+      {
+        name: 'Teflon pan',
+        quantity: 1,
+        price: 39.99,
+        discountPercentage: 0,
+      },
+      {
+        name: 'Apron',
+        quantity: 2,
+        price: 15.99,
+        discountPercentage: 5,
+      },
+    ],
+    shippingAddress: {
+      country: 'Finland',
+      street1: 'Koskikatu 1',
+      street2: 'A45',
+      city: 'Joensuu',
+      zip: '80100',
+    },
+    billingAddress: {
+      country: 'Finland',
+      street1: 'Koskikatu 1',
+      street2: 'A45',
+      city: 'Joensuu',
+      zip: '80100',
+    },
+  },
+  {
+    _id: new mongoose.Types.ObjectId(),
+    userId: initialUsers[1]._id,
+    paymentStatus: 'Pending',
+    status: 'Ready',
+    amount: 100,
+    items: [
+      {
+        name: 'Phone charger',
+        quantity: 1,
+        price: 40,
+        discountPercentage: 0,
+      },
+      {
+        name: 'Baseball bat',
+        quantity: 2,
+        price: 30,
+        discountPercentage: 0,
+      },
+    ],
+    shippingAddress: {
+      country: 'Finland',
+      street1: 'Paavonkatu 33',
+      street2: 'B34',
+      city: 'Inari',
+      zip: '00034',
+    },
+    billingAddress: {
+      country: 'Finland',
+      street1: 'Paavonkatu 33',
+      street2: 'B34',
+      city: 'Inari',
+      zip: '00034',
+    },
+  },
+];
+
 const usersInDb = async () => {
   const users = await User.find({});
   return users.map((user) => user.toJSON());
@@ -95,6 +171,11 @@ const productsInDb = async () => {
   return products.map((product) => product.toJSON());
 };
 
+const ordersInDb = async () => {
+  const orders = await Order.find({});
+  return orders.map((order) => order.toJSON());
+};
+
 const productCategoriesInDb = async () => {
   const categories = await Product.find().distinct('category');
   return categories;
@@ -103,7 +184,9 @@ const productCategoriesInDb = async () => {
 module.exports = {
   initialUsers,
   initialProducts,
+  initialOrders,
   usersInDb,
   productsInDb,
+  ordersInDb,
   productCategoriesInDb,
 };

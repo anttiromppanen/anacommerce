@@ -7,6 +7,7 @@ const app = require('../app');
 const api = supertest(app);
 
 const User = require('../models/User');
+const Order = require('../models/Order');
 
 let testUser = null;
 
@@ -375,6 +376,54 @@ describe('/api/users', () => {
 
         expect(response._body).toBeTruthy();
         expect(response._body).not.toHaveProperty('hashedPassword');
+      });
+    });
+
+    describe('orders field', () => {
+      it('should populate orders from orders collection when user is added', async () => {
+        await Order.deleteMany({});
+        await Order.insertMany(helper.initialOrders);
+        const orders = await Order.find({});
+        testUser.orders = [orders[0]._id];
+
+        const { body } = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(201);
+
+        expect(body.orders).toHaveLength(1);
+        expect(body.orders[0]).toHaveProperty('id');
+        expect(body.orders[0]).toHaveProperty('userId');
+        expect(body.orders[0]).toHaveProperty('status');
+      });
+
+      it('should populate orders when GET user', async () => {
+        await Order.deleteMany({});
+        await Order.insertMany(helper.initialOrders);
+        const orders = await Order.find({});
+        testUser.orders = [orders[0]._id];
+
+        const { body } = await api
+          .post('/api/users')
+          .send(testUser)
+          .expect(201);
+
+        const savedUserLogin = await api
+          .post('/api/login')
+          .send({ username: testUser.id, password: testUser.password })
+          .expect(200);
+
+        const { token } = savedUserLogin._body;
+
+        const { _body } = await api
+          .get(`/api/users/${body.id}`)
+          .set('Authorization', `Bearer ${token}`)
+          .expect(200);
+
+        expect(_body.orders).toHaveLength(1);
+        expect(_body.orders[0]).toHaveProperty('id');
+        expect(_body.orders[0]).toHaveProperty('userId');
+        expect(_body.orders[0]).toHaveProperty('status');
       });
     });
   });
