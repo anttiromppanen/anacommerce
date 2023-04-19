@@ -23,6 +23,10 @@ const orderSchema = mongoose.Schema({
     required: true,
   },
   items: [{
+    productId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -82,6 +86,29 @@ const orderSchema = mongoose.Schema({
     },
   },
 });
+
+// eslint-disable-next-line func-names
+orderSchema.statics.get10MostSoldProducts = function () {
+  const result = this.aggregate([
+    {
+      $unwind: '$items',
+    },
+    {
+      $group: {
+        _id: '$items.productId',
+        amountSold: { $sum: '$items.quantity' },
+      },
+    },
+    {
+      $sort: { amountSold: -1 },
+    },
+    {
+      $limit: 10,
+    },
+  ]);
+
+  return result;
+};
 
 orderSchema.set('toJSON', {
   transform: (_document, returnedObject) => {

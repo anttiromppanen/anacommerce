@@ -10,6 +10,7 @@ const logger = require('./utils/logger');
 const usersRouter = require('./controllers/users');
 const loginRouter = require('./controllers/login');
 const productsRouter = require('./controllers/products');
+const statsRouter = require('./controllers/stats');
 
 mongoose.set('strictQuery', false);
 
@@ -32,6 +33,7 @@ morgan('tiny');
 app.use('/api/users', usersRouter);
 app.use('/api/login', loginRouter);
 app.use('/api/products', productsRouter);
+app.use('/api/stats', statsRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

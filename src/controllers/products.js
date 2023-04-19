@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const productsRouter = require('express').Router();
 const Product = require('../models/Product');
 

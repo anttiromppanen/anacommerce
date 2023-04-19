@@ -53,6 +53,7 @@ const initialProducts = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo. Vel pretium lectus quam id leo in vitae turpis.',
     category: 'Food',
     subCategory: 'Vegetable',
+    price: 29.99,
     skus: [
       {
         weight: 0.2,
@@ -72,6 +73,7 @@ const initialProducts = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Molestie at elementum eu facilisis sed odio morbi quis commodo',
     category: 'Clothing',
     subCategory: 'Jacket',
+    price: 45.99,
     skus: [
       {
         weight: 0.7,
@@ -97,12 +99,14 @@ const initialOrders = [
     amount: 50,
     items: [
       {
+        productId: new mongoose.Types.ObjectId(),
         name: 'Teflon pan',
         quantity: 1,
         price: 39.99,
         discountPercentage: 0,
       },
       {
+        productId: new mongoose.Types.ObjectId(),
         name: 'Apron',
         quantity: 2,
         price: 15.99,
@@ -132,14 +136,16 @@ const initialOrders = [
     amount: 100,
     items: [
       {
+        productId: new mongoose.Types.ObjectId(),
         name: 'Phone charger',
         quantity: 1,
         price: 40,
         discountPercentage: 0,
       },
       {
+        productId: new mongoose.Types.ObjectId(),
         name: 'Baseball bat',
-        quantity: 2,
+        quantity: 10,
         price: 30,
         discountPercentage: 0,
       },

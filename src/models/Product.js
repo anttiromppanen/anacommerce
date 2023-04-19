@@ -20,6 +20,10 @@ const productSchema = mongoose.Schema({
   subCategory: {
     type: String,
   },
+  price: {
+    type: mongoose.Decimal128,
+    required: true,
+  },
   skus: [{
     weight: {
       type: mongoose.Decimal128,
@@ -32,6 +36,9 @@ const productSchema = mongoose.Schema({
     quantity: {
       type: Number,
       required: true,
+    },
+    skuPrice: {
+      type: mongoose.Decimal128,
     },
   }],
   images: [{
