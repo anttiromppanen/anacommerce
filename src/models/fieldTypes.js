@@ -1,6 +1,9 @@
 const productCategoryTypes = Object.freeze({
   Food: 'Food',
-  Clothes: 'Clothing',
+  Clothing: 'Clothing',
+  Bike: 'Bike',
+  Grill: 'Grill',
+  Illumination: 'Illumination',
 });
 
 const paymentStatusTypes = Object.freeze({
