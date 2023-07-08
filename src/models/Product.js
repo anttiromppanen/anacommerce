@@ -1,7 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-param-reassign */
 const mongoose = require('mongoose');
-const { productCategoryTypes } = require('./fieldTypes');
 
 const productSchema = mongoose.Schema({
   name: {
@@ -14,11 +13,11 @@ const productSchema = mongoose.Schema({
   },
   category: {
     type: String,
-    enum: Object.values(productCategoryTypes),
     required: true,
   },
   subCategory: {
     type: String,
+    required: true,
   },
   price: {
     type: mongoose.Decimal128,

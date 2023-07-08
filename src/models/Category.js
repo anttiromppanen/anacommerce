@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const { productCategoryTypes } = require('./fieldTypes');
 
 const categorySchema = mongoose.Schema({
-  name: {
+  _id: {
     type: String,
     enum: Object.values(productCategoryTypes),
     required: true,

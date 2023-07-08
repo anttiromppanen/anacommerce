@@ -78,60 +78,6 @@ describe('/api/products', () => {
       expect(error.text).toContain('Item not found');
     });
   });
-
-  describe('GET /api/products/categories', () => {
-    it('should return product categories as JSON', async () => {
-      const { _body } = await api
-        .get('/api/products/categories')
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      const productTypesFromAddedItems = helper.initialProducts.map((product) => product.category);
-
-      expect(_body).toHaveLength(productTypesFromAddedItems.length);
-      expect(_body).toContain(productTypesFromAddedItems[0]);
-    });
-  });
-
-  describe('GET /api/products/categories/:category', () => {
-    it('should return products by category filter as JSON', async () => {
-      const products = await helper.productsInDb();
-      const categoryFilter = products[0].category;
-      const numberOfProductsByFilterInitially = products
-        .filter((product) => product.category === categoryFilter);
-
-      const { _body } = await api
-        .get(`/api/products/categories/${categoryFilter}`)
-        .expect(200)
-        .expect('Content-Type', /application\/json/);
-
-      expect(_body).toHaveLength(numberOfProductsByFilterInitially.length);
-    });
-
-    it('should work when filter is not lowercase', async () => {
-      const categories = await helper.productCategoriesInDb();
-      const firstCategory = categories[0];
-      const filterCategoryUppercase = firstCategory.toUpperCase();
-
-      const resultInproperlyTyped = await api
-        .get(`/api/products/categories/${filterCategoryUppercase}`)
-        .expect(200);
-
-      const resultProperlyTyped = await api
-        .get(`/api/products/categories/${firstCategory}`)
-        .expect(200);
-
-      expect(resultProperlyTyped._body).toHaveLength(resultInproperlyTyped._body.length);
-    });
-
-    it('should return 404 when category is not found', async () => {
-      const { error } = await api
-        .get('/api/products/categories/notacategory')
-        .expect(404);
-
-      expect(error.text).toContain('Category not found');
-    });
-  });
 });
 
 afterAll(async () => {

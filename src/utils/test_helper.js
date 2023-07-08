@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const Product = require('../models/Product');
 const Order = require('../models/Order');
+const Category = require('../models/Category');
 
 const initialUsers = [
   {
@@ -167,6 +168,74 @@ const initialOrders = [
   },
 ];
 
+const initialCategories = [
+  {
+    _id: 'Food',
+    subcategories: [
+      {
+        subcategoryIcon: 'www.someimagetesttest.com',
+        subcategoryName: 'Fruit',
+      },
+      {
+        subcategoryIcon: 'www.someimagetesttest2.com',
+        subcategoryName: 'Vegetable',
+      },
+    ],
+  },
+  {
+    _id: 'Bike',
+    subcategories: [
+      {
+        subcategoryIcon: 'www.somebikeimage.com',
+        subcategoryName: 'Mountain Bike',
+      },
+      {
+        subcategoryIcon: 'www.someelectricimage.com/1234',
+        subcategoryName: 'Electric Bike',
+      },
+    ],
+  },
+  {
+    _id: 'Clothing',
+    subcategories: [
+      {
+        subcategoryIcon: 'www.sometieimage.com',
+        subcategoryName: 'Tie',
+      },
+      {
+        subcategoryIcon: 'www.someshirt.com/1234',
+        subcategoryName: 'Shirt',
+      },
+    ],
+  },
+  {
+    _id: 'Grill',
+    subcategories: [
+      {
+        subcategoryIcon: 'www.somegrillimage.com',
+        subcategoryName: 'Gas Grill',
+      },
+      {
+        subcategoryIcon: 'www.somegasgrillimage.com',
+        subcategoryName: 'Electric Grill',
+      },
+    ],
+  },
+  {
+    _id: 'Illumination',
+    subcategories: [
+      {
+        subcategoryIcon: 'www.someilluminationimage.com',
+        subcategoryName: 'Lightbulb',
+      },
+      {
+        subcategoryIcon: 'www.sometablelamb.com',
+        subcategoryName: 'Table Lamb',
+      },
+    ],
+  },
+];
+
 const usersInDb = async () => {
   const users = await User.find({});
   return users.map((user) => user.toJSON());
@@ -183,14 +252,15 @@ const ordersInDb = async () => {
 };
 
 const productCategoriesInDb = async () => {
-  const categories = await Product.find().distinct('category');
-  return categories;
+  const categories = await Category.find({});
+  return categories.map((category) => category.toJSON());
 };
 
 module.exports = {
   initialUsers,
   initialProducts,
   initialOrders,
+  initialCategories,
   usersInDb,
   productsInDb,
   ordersInDb,
