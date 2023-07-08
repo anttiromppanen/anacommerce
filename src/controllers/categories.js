@@ -1,6 +1,7 @@
 const categoriesRouter = require('express').Router();
 const Category = require('../models/Category');
-const Product = require('../models/Product');
+
+const helpers = require('../utils/helpers');
 
 categoriesRouter.get('/', async (req, res) => {
   const allCategories = await Category.find().distinct('_id');
@@ -9,20 +10,16 @@ categoriesRouter.get('/', async (req, res) => {
 
 categoriesRouter.get('/:category', async (req, res) => {
   const { category } = req.params;
-  const categoryLowercase = category.toLowerCase();
-  const categoryUpperCase = categoryLowercase
-    .charAt(0)
-    .toUpperCase()
-    + categoryLowercase.slice(1);
+  const categoryUpperCase = helpers.capitalizeString(category);
 
-  const productsByCategory = await Product
-    .find({ category: categoryUpperCase });
+  const filterByCategory = await Category.findById(categoryUpperCase);
+  const allSubcategories = filterByCategory.subcategories;
 
-  if (productsByCategory.length === 0) {
+  if (allSubcategories.length === 0) {
     return res.status(404).json({ error: 'Category not found' });
   }
 
-  return res.status(200).json(productsByCategory);
+  return res.status(200).json(allSubcategories);
 });
 
 module.exports = categoriesRouter;
