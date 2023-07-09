@@ -28,6 +28,24 @@ describe('/api/products/categories', () => {
     });
 
     describe('GET /api/products/categories/:category', () => {
+      it('should return correct amount of subcategories', async () => {
+        const { initialCategories } = helper;
+
+        const { _body } = await api
+          .get(`/api/products/categories/${initialCategories[0]._id}`)
+          .expect(200)
+          .expect('Content-Type', /application\/json/);
+
+        expect(initialCategories[0].subcategories.length).toHaveLength(_body.length);
+      });
+
+      it.only('should return 404 "Category not found" when category doesnt exist', async () => {
+        const { _body } = await api
+          .get('/api/products/categories/imaginarycategory')
+          .expect(404);
+
+        console.log(_body);
+      });
     });
   });
 });

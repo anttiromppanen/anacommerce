@@ -13,12 +13,12 @@ categoriesRouter.get('/:category', async (req, res) => {
   const categoryUpperCase = helpers.capitalizeString(category);
 
   const filterByCategory = await Category.findById(categoryUpperCase);
-  const allSubcategories = filterByCategory.subcategories;
 
-  if (allSubcategories.length === 0) {
+  if (!filterByCategory) {
     return res.status(404).json({ error: 'Category not found' });
   }
 
+  const allSubcategories = filterByCategory.subcategories;
   return res.status(200).json(allSubcategories);
 });
 
