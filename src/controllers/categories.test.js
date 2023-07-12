@@ -36,15 +36,31 @@ describe('/api/products/categories', () => {
           .expect(200)
           .expect('Content-Type', /application\/json/);
 
-        expect(initialCategories[0].subcategories.length).toHaveLength(_body.length);
+        const initialLength = initialCategories[0].subcategories;
+        const receivedLength = _body.length;
+
+        expect(initialLength).toHaveLength(receivedLength);
       });
 
-      it.only('should return 404 "Category not found" when category doesnt exist', async () => {
+      it('should return 404 "Category not found" when category doesnt exist', async () => {
         const { _body } = await api
           .get('/api/products/categories/imaginarycategory')
           .expect(404);
 
-        console.log(_body);
+        expect(_body.error).toContain('Category not found');
+      });
+
+      it('should be case insensitive', async () => {
+        const categoryName = 'cLoThInG';
+
+        const { _body } = await api
+          .get(`/api/products/categories/${categoryName}`)
+          .expect(200);
+
+        const initialClothingCategory = helper.initialCategories.find((x) => x._id === 'Clothing');
+        const initialSubcategoryName = initialClothingCategory.subcategories[0].subcategoryName;
+
+        expect(_body[0].subcategoryName).toContain(initialSubcategoryName);
       });
     });
   });
