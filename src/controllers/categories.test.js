@@ -63,6 +63,74 @@ describe('/api/products/categories', () => {
         expect(_body[0].subcategoryName).toContain(initialSubcategoryName);
       });
     });
+
+    describe('GET /api/products/categories/q/:queryString', () => {
+      it('should return 404 "Query must contain at least 3 characters"', async () => {
+        const queryString = 'ab';
+
+        const { error } = await api
+          .get(`/api/products/categories/q/${queryString}`)
+          .expect(404);
+
+        expect(error.text).toContain('Query must contain at least 3 characters');
+      });
+
+      it('should be case insensitive', async () => {
+        const queryString = 'gRiLl';
+
+        const { _body } = await api
+          .get(`/api/products/categories/q/${queryString}`)
+          .expect(200);
+
+        expect(_body).toHaveLength(1);
+        expect(_body[0].name).toContain('Grill');
+      });
+
+      it('should contain fields name, apiCategory, icon', async () => {
+        const queryString = 'bike';
+
+        const { _body } = await api
+          .get(`/api/products/categories/q/${queryString}`)
+          .expect(200);
+
+        expect(_body[0]).toHaveProperty('name');
+        expect(_body[0]).toHaveProperty('apiCategory');
+        expect(_body[0]).toHaveProperty('icon');
+      });
+
+      it('should return correct amount of results', async () => {
+        const queryString = 'ill';
+
+        const { _body } = await api
+          .get(`/api/products/categories/q/${queryString}`)
+          .expect(200);
+
+        expect(_body).toHaveLength(2);
+        expect(_body[0].name).toContain('Grill' || 'Illumination');
+      });
+    });
+
+    describe('GET /api/products/categories/subcategories/q/:queryString', () => {
+      it('should return 404 "Query must contain at least 3 characters"', async () => {
+        const queryString = 'ab';
+
+        const { error } = await api
+          .get(`/api/products/categories/subcategories/q/${queryString}`)
+          .expect(404);
+
+        expect(error.text).toContain('Query must contain at least 3 characters');
+      });
+
+      it.only('should be case insensitive', async () => {
+        const queryString = 'leCtR';
+
+        const { _body } = await api
+          .get(`/api/products/categories/subcategories/q/${queryString}`)
+          .expect(200);
+
+        expect(_body).toHaveLength(2);
+      });
+    });
   });
 });
 
