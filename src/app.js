@@ -12,6 +12,7 @@ const loginRouter = require('./controllers/login');
 const productsRouter = require('./controllers/products');
 const statsRouter = require('./controllers/stats');
 const categoriesRouter = require('./controllers/categories');
+const searchbarRouter = require('./controllers/searchbar');
 
 mongoose.set('strictQuery', false);
 
@@ -36,6 +37,7 @@ app.use('/api/login', loginRouter);
 app.use('/api/products/categories', categoriesRouter);
 app.use('/api/products', productsRouter);
 app.use('/api/stats', statsRouter);
+app.use('/api/searchbar', searchbarRouter);
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);

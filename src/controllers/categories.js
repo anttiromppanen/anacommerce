@@ -7,9 +7,9 @@ const { caseInsensitiveSearch } = require('../utils/helpers');
 categoriesRouter.get('/subcategories/q/:queryString', async (req, res) => {
   const { queryString } = req.params;
 
-  if (queryString.length < 3) {
-    return res.status(404).json({ error: 'Query must contain at least 3 characters' });
-  }
+  // if (queryString.length < 3) {
+  //  return res.status(404).json({ error: 'Query must contain at least 3 characters' });
+  // }
 
   const result = await Category.aggregate([{ $unwind: '$subcategories' }]);
 
@@ -31,9 +31,9 @@ categoriesRouter.get('/subcategories/q/:queryString', async (req, res) => {
 categoriesRouter.get('/q/:queryString', async (req, res) => {
   const { queryString } = req.params;
 
-  if (queryString.length < 3) {
-    return res.status(404).json({ error: 'Query must contain at least 3 characters' });
-  }
+  // if (queryString.length < 3) {
+  //  return res.status(404).json({ error: 'Query must contain at least 3 characters' });
+  // }
 
   const result = await Category.find({ _id: caseInsensitiveSearch(queryString) });
   const resultInCorrectForm = result.map((category) => (
