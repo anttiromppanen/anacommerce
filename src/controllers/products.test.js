@@ -78,6 +78,39 @@ describe('/api/products', () => {
       expect(error.text).toContain('Item not found');
     });
   });
+
+  describe('GET /api/products/q/:query', () => {
+    it('should return 404 "Query must contain at least 3 characters"', async () => {
+      const queryString = 'ab';
+      const { error } = await api
+        .get(`/api/products/q/${queryString}`);
+
+      expect(error.text).toContain('Query must contain at least 3 characters');
+    });
+
+    it('should be case insensitive', async () => {
+      const queryString = 'aRrO';
+
+      const { _body } = await api
+        .get(`/api/products/q/${queryString}`)
+        .expect(200);
+
+      expect(_body).toHaveLength(1);
+      expect(_body[0].name).toContain('Carrot');
+    });
+
+    it('should contain fields name, apiCategory, icon', async () => {
+      const queryString = 'carrot';
+
+      const { _body } = await api
+        .get(`/api/products/q/${queryString}`)
+        .expect(200);
+
+      expect(_body[0]).toHaveProperty('name');
+      expect(_body[0]).toHaveProperty('apiCategory');
+      expect(_body[0]).toHaveProperty('icon');
+    });
+  });
 });
 
 afterAll(async () => {

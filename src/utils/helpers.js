@@ -8,4 +8,8 @@ function capitalizeString(stringToCapitalize) {
   return stringCapitalized;
 }
 
-module.exports = { capitalizeString };
+function caseInsensitiveSearch(string) {
+  return { $regex: new RegExp(string, 'i') };
+}
+
+module.exports = { capitalizeString, caseInsensitiveSearch };
