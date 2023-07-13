@@ -121,7 +121,7 @@ describe('/api/products/categories', () => {
         expect(error.text).toContain('Query must contain at least 3 characters');
       });
 
-      it.only('should be case insensitive', async () => {
+      it('should be case insensitive', async () => {
         const queryString = 'leCtR';
 
         const { _body } = await api
