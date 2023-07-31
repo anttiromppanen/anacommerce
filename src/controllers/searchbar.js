@@ -6,7 +6,8 @@ const sortAlgorithm = require('../utils/searchbarSortAlgorithm');
 const baseUrl = 'http://localhost:3001/api';
 
 searchbarRouter.get('/', async (req, res) => {
-  const { searchQuery } = req.body;
+  console.log(req.params);
+  const { searchQuery } = req.params;
   const productsResult = await axios.get(`${baseUrl}/products/q/${searchQuery}`);
   const categoriesResult = await axios.get(`${baseUrl}/products/categories/q/${searchQuery}`);
   const subcategoriesResult = await axios.get(`${baseUrl}/products/categories/subcategories/q/${searchQuery}`);
