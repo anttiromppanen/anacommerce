@@ -12,4 +12,10 @@ function caseInsensitiveSearch(string) {
   return { $regex: new RegExp(string, 'i') };
 }
 
-module.exports = { capitalizeString, caseInsensitiveSearch };
+function roundDownIfResultNotZero(number) {
+  const numberRoundedDown = Math.floor(number);
+  if (numberRoundedDown === 0) return 1;
+  return numberRoundedDown;
+}
+
+module.exports = { capitalizeString, caseInsensitiveSearch, roundDownIfResultNotZero };
