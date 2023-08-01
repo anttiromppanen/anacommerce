@@ -18,7 +18,7 @@ const categorySchema = mongoose.Schema({
       type: String,
       required: true,
     },
-    menuFieldTypes: [{
+    additionalMenuFields: [{
       name: {
         type: String,
         required: true,
@@ -28,6 +28,16 @@ const categorySchema = mongoose.Schema({
         required: true,
       },
     }],
+  }],
+  menuFields: [{
+    name: {
+      type: String,
+      required: true,
+    },
+    fieldType: {
+      type: String,
+      required: true,
+    },
   }],
 });
 
