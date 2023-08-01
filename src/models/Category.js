@@ -18,6 +18,16 @@ const categorySchema = mongoose.Schema({
       type: String,
       required: true,
     },
+    menuFieldTypes: [{
+      name: {
+        type: String,
+        required: true,
+      },
+      fieldType: {
+        type: String,
+        required: true,
+      },
+    }],
   }],
 });
 
